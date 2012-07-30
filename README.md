@@ -16,10 +16,8 @@ java -jar ebookdownloader.jar -outputFolder=c:\itebooks\ -start=100 -end=150
 
 ==================
 
-TODO 
--> Improve filename generation: should not exclude chars like #, + and so on.
-   They can be useful in case of specific words like C++, C# etc.
--> Generate a txt file for each file containing the info regarding the ebooks.
--> Generate a summary txt that relates ebook id to downloaded file.
--> Use Log4J for better logging.
-
+TODO
+1. Improve filename generation: should not exclude chars like # or +. They can be useful in case of specific words like C++, C# etc.
+2. Generate a txt file for each file containing the info regarding the ebooks.
+3. Generate a summary txt that relates ebook id to the downloaded file.
+4. Use Log4J for better logging.
