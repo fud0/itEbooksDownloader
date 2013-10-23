@@ -12,6 +12,8 @@ package net.securnetwork.itebooks.downloader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
@@ -87,7 +89,8 @@ public final class EbookDownloader {
 			}
 			try {
 				for (int i=start;i<=end;i++){
-					Source sourceHTML=new Source(new URL(BASE_EBOOK_URL + i + SLASH));
+					String ebookPage = BASE_EBOOK_URL + i + SLASH;
+					Source sourceHTML=new Source(new URL(ebookPage));
 					List<Element> allTables = sourceHTML.getAllElements(HTMLElementName.TABLE);
 					Element detailsTable = allTables.get(0);
 					// Try to build an info bean for the ebook
@@ -101,10 +104,16 @@ public final class EbookDownloader {
 						System.out.print(
 								MessageFormat.format(Messages.getString("EbookDownloader.InfoDownloading"), new Object[]{ebook.getSiteId()})); //$NON-NLS-1$
 						try {
-							FileUtils.copyURLToFile(new URL(ebook.getDownloadLink()), new File(filename));
+							URL ebookPageURL = new URL(ebook.getDownloadLink());
+							HttpURLConnection con = (HttpURLConnection) ebookPageURL.openConnection();
+							con.setRequestMethod("GET");
+							con.setRequestProperty("Referer", ebookPage);
+							InputStream conIS = con.getInputStream();
+							FileUtils.copyInputStreamToFile(conIS, new File(filename));
 							System.out.println(
 									Messages.getString("EbookDownloader.DownloadingOK")); //$NON-NLS-1$
 							prefs.put(LAST_SAVED_EBOOK_PREF, i+""); //$NON-NLS-1$
+							conIS.close();
 						} catch (Exception e) {
 							System.out.println(
 									Messages.getString("EbookDownloader.DownloadingKO")); //$NON-NLS-1$
@@ -195,7 +204,7 @@ public final class EbookDownloader {
 		ebook.setLanguage(EbookPageParseUtils.getLanguage(detailsTable));
 		ebook.setFileSizeMB(EbookPageParseUtils.getFileSize((detailsTable)));
 		ebook.setFileFormat(EbookPageParseUtils.getFileFormat(detailsTable));
-		ebook.setDownloadLink(BASE_URL + EbookPageParseUtils.getDownloadLink(detailsTable));
+		ebook.setDownloadLink(EbookPageParseUtils.getDownloadLink(detailsTable));
 		return ebook;
 	}
 	/*
