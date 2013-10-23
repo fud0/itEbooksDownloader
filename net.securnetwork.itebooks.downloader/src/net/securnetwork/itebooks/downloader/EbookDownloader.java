@@ -35,7 +35,7 @@ import org.apache.commons.io.FileUtils;
  */
 public final class EbookDownloader {
 	// Program version
-	private static final String VERSION="0.1"; //$NON-NLS-1$
+	private static final String VERSION="0.2"; //$NON-NLS-1$
 	// Program arguments
 	private static final String END_INDEX_ARG = "-end="; //$NON-NLS-1$
 	private static final String START_INDEX_ARG = "-start="; //$NON-NLS-1$
