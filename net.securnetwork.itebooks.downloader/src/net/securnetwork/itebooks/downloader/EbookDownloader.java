@@ -80,6 +80,11 @@ public final class EbookDownloader {
 				return;
 			}
 			else{
+				// Possibly fix the destination folder path
+				destinationFolder=destinationFolder.replace("\\", "/");
+				if(!destinationFolder.endsWith("/")){
+					destinationFolder+="/";
+				}
 				prefs.put(OUTPUT_FOLDER_PREF, destinationFolder);
 			}
 			
